@@ -1,6 +1,6 @@
 {
-    "name": "arturs_app_joke",
-    "short_name": "arturs_app_joke",
+    "name": "dad_jokes",
+    "short_name": "dad_jokes",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
