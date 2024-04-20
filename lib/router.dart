@@ -1,4 +1,4 @@
-import 'package:arturs_app_joke/jokes_page.dart';
+import 'package:dad_jokes/jokes_page.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(

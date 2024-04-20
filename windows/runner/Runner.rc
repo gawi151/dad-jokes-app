@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "pl.gawronlucas" "\0"
-            VALUE "FileDescription", "arturs_app_joke" "\0"
+            VALUE "FileDescription", "dad_jokes" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "arturs_app_joke" "\0"
+            VALUE "InternalName", "dad_jokes" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 pl.gawronlucas. All rights reserved." "\0"
-            VALUE "OriginalFilename", "arturs_app_joke.exe" "\0"
-            VALUE "ProductName", "arturs_app_joke" "\0"
+            VALUE "OriginalFilename", "dad_jokes.exe" "\0"
+            VALUE "ProductName", "dad_jokes" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
