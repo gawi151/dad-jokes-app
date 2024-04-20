@@ -1,5 +1,5 @@
 import 'package:retrofit/retrofit.dart';
-import 'package:dio/dio.dart';
+import 'package:dio/dio.dart' hide Headers;
 
 part 'dad_jokes_api.g.dart';
 
@@ -8,6 +8,8 @@ abstract class DadJokesApi {
   factory DadJokesApi(Dio dio, {String baseUrl}) = _DadJokesApi;
 
   @GET('')
-  @Header("Accept: text/plain")
+  @Headers(<String, dynamic>{
+    'Accept': 'text/plain',
+  })
   Future<String> getRandomJoke();
 }

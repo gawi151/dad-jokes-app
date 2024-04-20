@@ -1,11 +1,13 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:arturs_app_joke/dad_jokes_api.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:loading_indicator/loading_indicator.dart';
 
-final dio = Dio();
+final dio = Dio()..interceptors.add(LogInterceptor(responseBody: true));
 final dadJokesApi = DadJokesApi(dio);
 
 class JokesPage extends HookWidget {
@@ -16,46 +18,60 @@ class JokesPage extends HookWidget {
     final reloadKey = useState(UniqueKey());
 
     final jokeRequest = useMemoized(
-      () => dadJokesApi.getRandomJoke(),
+      () => Future.delayed(Durations.long1, dadJokesApi.getRandomJoke),
       [reloadKey.value],
     );
     final snapshot = useFuture(jokeRequest);
 
+    Widget content;
+    if (snapshot.connectionState == ConnectionState.done) {
+      if (snapshot.hasError) {
+        content = const ErrorContent();
+      }
+
+      final joke = snapshot.data;
+      if (joke == null || joke.isEmpty) {
+        content = const NoJokeFound();
+      } else {
+        content = DefaultTextStyle.merge(
+          style: const TextStyle(fontSize: 24, height: 1.5),
+          child: AnimatedTextKit(
+            isRepeatingAnimation: false,
+            animatedTexts: [
+              TypewriterAnimatedText(
+                joke,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      }
+    } else {
+      content = const LoadingIndicator(
+        indicatorType: Indicator.pacman,
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text("Dad Joke Generator")),
       body: Center(
-        child: Column(
-          children: [
-            Builder(
-              builder: (context) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasError) {
-                    return const ErrorContent();
-                  }
-
-                  final joke = snapshot.data;
-                  if (joke == null || joke.isEmpty) {
-                    return const NoJokeFound();
-                  }
-
-                  return Text(
-                    joke,
-                    style: const TextStyle(fontSize: 24, height: 1.5),
-                    textAlign: TextAlign.center,
-                  );
-                } else {
-                  return const LoadingIndicator(
-                    indicatorType: Indicator.pacman,
-                  );
-                }
-              },
-            ),
-            const Gap(16),
-            ElevatedButton(
-              onPressed: () => reloadKey.value = UniqueKey(),
-              child: const Text('Get another joke'),
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: AnimatedSwitcher(
+                    duration: Durations.extralong4, child: content),
+              ),
+              const Gap(32),
+              ElevatedButton(
+                onPressed: () => reloadKey.value = UniqueKey(),
+                child: const Text('Get another joke'),
+              ),
+            ],
+          ),
         ),
       ),
     );
