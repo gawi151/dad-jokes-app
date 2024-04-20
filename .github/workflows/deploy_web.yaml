@@ -19,6 +19,8 @@ jobs:
       run: flutter pub get
     - name: Build
       run: flutter build web --release --base-href /dad-jokes-app/
+    - name: List build output
+      run: ls build/web
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v4
       with:
