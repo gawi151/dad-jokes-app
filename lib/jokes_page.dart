@@ -26,28 +26,20 @@ class JokesPage extends HookWidget {
     if (snapshot.connectionState == ConnectionState.done) {
       if (snapshot.hasError) {
         content = const ErrorContent();
-      }
-
-      final joke = snapshot.data;
-      if (joke == null || joke.isEmpty) {
-        content = const NoJokeFound();
       } else {
-        content = DefaultTextStyle.merge(
-          style: const TextStyle(fontSize: 24, height: 1.5),
-          child: AnimatedTextKit(
-            isRepeatingAnimation: false,
-            animatedTexts: [
-              TypewriterAnimatedText(
-                joke,
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        );
+        final joke = snapshot.data;
+        if (joke == null || joke.isEmpty) {
+          content = const NoJokeFound();
+        } else {
+          content = JokeText(joke: joke);
+        }
       }
     } else {
-      content = const LoadingIndicator(
-        indicatorType: Indicator.pacman,
+      content = const SizedBox(
+        width: 200,
+        child: LoadingIndicator(
+          indicatorType: Indicator.pacman,
+        ),
       );
     }
 
@@ -62,18 +54,64 @@ class JokesPage extends HookWidget {
             children: [
               Expanded(
                 child: AnimatedSwitcher(
-                    duration: Durations.extralong4, child: content),
+                  duration: Durations.extralong4,
+                  child: content,
+                ),
               ),
               const Gap(32),
-              ElevatedButton(
+              TextButton.icon(
+                icon: const Icon(Icons.refresh),
+                label: Text(
+                  'Get new joke',
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
                 onPressed: () => reloadKey.value = UniqueKey(),
-                child: const Text('Get another joke'),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class JokeText extends HookWidget {
+  const JokeText({super.key, required this.joke});
+
+  final String joke;
+
+  @override
+  Widget build(BuildContext context) {
+    final animationFinished = useState(false);
+
+    const textStyle = TextStyle(fontSize: 30, height: 1.5);
+
+    // use selection area because selection text changes
+    // size of the text widget (height is different from normal text)
+    final selectableJoke = SelectionArea(
+      child: Text(
+        joke,
+        textAlign: TextAlign.center,
+        style: textStyle,
+      ),
+    );
+
+    final animatingJoke = AnimatedTextKit(
+      isRepeatingAnimation: false,
+      animatedTexts: [
+        TypewriterAnimatedText(
+          joke,
+          textAlign: TextAlign.center,
+          textStyle: textStyle,
+          cursor: '', // no cursor to avoid jumping text when switching
+        ),
+      ],
+      onFinished: () {
+        animationFinished.value = true;
+      },
+    );
+
+    return animationFinished.value ? selectableJoke : animatingJoke;
   }
 }
 
