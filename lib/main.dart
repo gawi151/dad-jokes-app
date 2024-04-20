@@ -1,4 +1,4 @@
-import 'package:arturs_app_joke/router.dart';
+import 'package:dad_jokes/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Joke app',
+      title: 'Dad Jokes',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
         useMaterial3: true,

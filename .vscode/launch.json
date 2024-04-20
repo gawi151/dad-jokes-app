@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "arturs_app_joke",
+            "name": "dad_jokes",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "arturs_app_joke (profile mode)",
+            "name": "dad_jokes (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "arturs_app_joke (release mode)",
+            "name": "dad_jokes (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
